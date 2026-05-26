@@ -12,13 +12,21 @@ class ReservationController extends Controller
     /**
      * 📅 予約カレンダー画面の表示
      */
+        /**
+     * 📅 予約カレンダー画面の表示
+     */
     public function index()
     {
-        // 予約フォームの選択肢として使うために、ログインユーザーの顧客一覧を取得
-        $customers = Customer::where('user_id', Auth::id())->orderBy('kana')->get();
+        // 1. ログイン中のユーザー（美容師）情報を100%確実に取得して同期させる
+        $user = Auth::user();
+
+        // 2. 予約フォームの選択肢として使うために、このユーザーに紐づく顧客一覧を取得
+        $customers = Customer::where('user_id', $user->id)->orderBy('kana')->get();
         
-        return view('reservations.index', compact('customers'));
+        // 💡 修正の正解：共通レイアウト（Breeze）がパニックを起こさないよう、compactに 'user' を追加して確実に引き渡します
+        return view('reservations.index', compact('customers', 'user'));
     }
+
 
     /**
      * 📊 FullCalendar用に予約データをJSON形式で返す

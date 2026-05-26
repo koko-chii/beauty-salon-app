@@ -1,12 +1,15 @@
 <x-app-layout>
+    <!-- 💡 他のクリーンなページと100%同じヘッダー枠を呼び出します -->
     <x-slot name="header">
         <h1>{{ __('予約スケジュール管理') }}</h1>
     </x-slot>
 
     @push('styles')
-        @vite(['resources/css/customer-edit.css'])
+        <!-- 💡 予約画面専用のクリーンな独自CSSを読み込みます -->
+        @vite(['resources/css/reservations.css'])
     @endpush
 
+    <!-- 💡 ⭕ 修正の正解：カレンダーが暴れてメニューバーを破壊しないよう、独立したコンテナの中に完全に閉じ込めました -->
     <div class="reservation-container">
         @if (session('success'))
             <div class="alert-success">
@@ -62,18 +65,15 @@
                             @error('memo') <p class="error-text">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- 💡 ボタンエリア：削除ボタンを配置できるように構造を調整 -->
                         <div class="form-actions-wrapper">
                             <div class="left-actions">
                                 <button type="button" class="btn-cancel hidden" id="btn-reset-form">クリア</button>
-                                <!-- 🗑️ 編集モードの時だけJavaScriptで表示させる削除ボタン -->
                                 <button type="button" class="btn-delete-trigger hidden" id="btn-delete-trigger">削除</button>
                             </div>
                             <button type="submit" class="btn-primary" id="btn-submit">予約を確定する</button>
                         </div>
                     </form>
 
-                    <!-- 🗑️ 削除を裏側で実行するための見えないフォーム（セキュリティ対応） -->
                     <form action="" method="POST" id="delete-reservation-form" class="hidden">
                         @csrf
                         @method('DELETE')
@@ -92,6 +92,7 @@
     </div>
 
     @push('scripts')
+        <!-- 💡 JavaScriptは完全に外部ファイルから安全に読み込みます -->
         @vite(['resources/js/reservations.js'])
     @endpush
 </x-app-layout>

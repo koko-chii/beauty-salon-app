@@ -290,3 +290,33 @@ a[href*="customers"]:hover {
     white-space: nowrap;
     box-sizing: border-box;
 }
+/* --- 📁 ナビゲーションメニューの文字色をはっきり表示させる設定 --- */
+
+/* メニューの「Dashboard」「顧客管理」「予約管理」の文字色を調整 */
+.reservation-container nav a,
+nav .flex a {
+    color: #4b5563 !important; /* しっかり見えるダークグレー */
+    font-weight: 500 !important;
+    text-decoration: none !important;
+}
+
+/* メニューにマウスを乗せたときの文字色 */
+.reservation-container nav a:hover,
+nav .flex a:hover {
+    color: #111827 !important; /* より濃い黒に近い色 */
+}
+
+/* 現在開いているアクティブなメニューの文字色 */
+nav a.border-indigo-400,
+nav div.hidden a[class*="active"] {
+    color: #4f46e5 !important; /* 美しいパープル */
+    border-bottom: 2px solid #4f46e5 !important;
+}
+
+/* 右上の「テスト太郎」などのユーザー名部分の文字色 */
+nav button,
+nav button div {
+    color: #4b5563 !important;
+    font-weight: 500 !important;
+}
+

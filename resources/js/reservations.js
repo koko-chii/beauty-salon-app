@@ -12,8 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const methodContainer = document.getElementById('method-container');
     const submitBtn = document.getElementById('btn-submit');
     const resetBtn = document.getElementById('btn-reset-form');
-    
-    // 💡 削除ボタンと削除用フォームを取得
     const deleteBtn = document.getElementById('btn-delete-trigger');
     const deleteForm = document.getElementById('delete-reservation-form');
     
@@ -30,14 +28,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return localISOTime;
     }
 
-    // 💡 新規登録モードに戻る際、削除ボタンも一緒に隠すように修正
     function resetFormToCreate() {
         form.action = "/reservations";
         formTitle.textContent = "📅 新規予約を登録";
         methodContainer.innerHTML = "";
         submitBtn.textContent = "予約を確定する";
         resetBtn.classList.add('hidden');
-        deleteBtn.classList.add('hidden'); // 削除ボタンを隠す
+        deleteBtn.classList.add('hidden');
         form.reset();
     }
 
@@ -45,8 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const calendar = new Calendar(calendarEl, {
             plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
             initialView: 'dayGridMonth',
-            locale: jaLocale,
-            firstDay: 0,
+            locale: jaLocale, // 日本語化
+            firstDay: 0,      // 日曜日スタート
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -56,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
             navLinks: true,
             editable: false,
             selectable: true,
-            events: '/reservations/events',
+            events: "/reservations/events", // 予約データ用URL
             eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false },
 
             eventClick: function(info) {
@@ -68,9 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.textContent = "変更を保存する";
                 
                 resetBtn.classList.remove('hidden');
-                deleteBtn.classList.remove('hidden'); // 💡 削除ボタンを表示！
+                deleteBtn.classList.remove('hidden');
                 
-                // 💡 削除用フォームの送信先URLを「いまクリックされた予約ID」に設定
                 deleteForm.action = `/reservations/${event.id}`;
                 
                 inputCustomer.value = event.extendedProps.customerId || '';
@@ -89,11 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
             resetBtn.addEventListener('click', resetFormToCreate);
         }
 
-        // 🗑️ 削除ボタンがクリックされた時の安全ダイアログ処理
         if (deleteBtn) {
             deleteBtn.addEventListener('click', function() {
                 if (confirm('この予約スケジュールを本当に削除してもよろしいですか？')) {
-                    deleteForm.submit(); // はいを押したら裏側のフォームを発火して実行
+                    deleteForm.submit();
                 }
             });
         }
