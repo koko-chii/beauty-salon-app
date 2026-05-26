@@ -27,6 +27,9 @@ class StoreVisitHistoryRequest extends FormRequest
             'visited_at'  => 'required|date',               // 来店日は必須、日付形式
             'menu'        => 'required|string|max:255',      // メニューは必須
             'memo'        => 'nullable|string',              // メモは空っぽOK
+            'image_1'     => 'nullable|image|max:2048',
+            'image_2'     => 'nullable|image|max:2048',
+            'image_3'     => 'nullable|image|max:2048',
         ];
     }
 }

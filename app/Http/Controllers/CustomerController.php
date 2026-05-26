@@ -8,6 +8,8 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest; // 💡 更新用のリクエスト
 use App\Http\Requests\StoreVisitHistoryRequest;
 use App\Models\VisitHistory;
+use Illuminate\Support\Facades\Storage;
+
 
 class CustomerController extends Controller
 {
@@ -115,17 +117,24 @@ class CustomerController extends Controller
             abort(403);
         }
 
-        // バリデーション済みの安全なデータを取得
-        $validated = $request->validated();
+        // 1. まずバリデーション済みの安全な基本データを取得（visited_at, menu, memoなど）
+        $data = $request->validated();
 
-        // 🔗 リレーションの力を使って、このお客様に紐づくカルテを一発で保存！
-        $customer->visitHistories()->create([
-            'visited_at' => $validated['visited_at'],
-            'menu'       => $validated['menu'],
-            'memo'       => $validated['memo'],
-        ]);
+        // 2. 送信された画像ファイルをループで処理して保存し、データ配列に直接追加する
+        for ($i = 1; $i <= 3; $i++) {
+            if ($request->hasFile("image_{$i}")) {
+                // ストレージの public/visit_images フォルダに保存
+                $path = $request->file("image_{$i}")->store('visit_images', 'public');
+                
+                // 💡 重要：一度取り出したデータ配列（$data）に直接パスを書き込みます（これで消されません！）
+                $data["image_path_{$i}"] = $path;
+            }
+        }
 
-        // 登録が終わったら、元の詳細画面に「カルテを追加しました」というメッセージ付きで戻る
+        // 3. 🔗 リレーションを使って、画像パス（image_path）もすべて含んだデータで一発保存！
+        $customer->visitHistories()->create($data);
+
+        // 登録が終わったら、元の詳細画面にメッセージ付きで戻る
         return redirect()->route('customers.show', $customer)->with('success', 'カルテ履歴を追加しました。');
     }
 
@@ -143,24 +152,37 @@ class CustomerController extends Controller
     /**
      * 💡 カルテを更新する
      */
-    public function updateHistory(\App\Http\Requests\StoreVisitHistoryRequest $request, Customer $customer, VisitHistory $visitHistory)
+    // 💡 引き数を「StoreVisitHistoryRequest」に書き換えました
+    public function updateHistory(StoreVisitHistoryRequest $request, Customer $customer, VisitHistory $visitHistory)
     {
-        if ($customer->user_id !== Auth::id() || $visitHistory->customer_id !== $customer->id) {
+        // 🔒 セキュリティチェック
+        if ($customer->user_id !== Auth::id()) {
             abort(403);
         }
 
-        $validated = $request->validated();
-        
-        // カルテデータを上書き
-        $visitHistory->update([
-            'visited_at' => $validated['visited_at'],
-            'menu'       => $validated['menu'],
-            'memo'       => $validated['memo'],
-        ]);
+        // 1. バリデーション済みの安全な基本データを取得（visited_at, menu, memo）
+        $data = $request->validated();
 
+        // 2. 新しい画像ファイルが送られてきた場合、古い画像を削除して入れ替える
+        for ($i = 1; $i <= 3; $i++) {
+            if ($request->hasFile("image_{$i}")) {
+                // 古いファイルがすでに登録されている場合は、ストレージから物理削除
+                if ($visitHistory->{"image_path_{$i}"}) {
+                    Storage::disk('public')->delete($visitHistory->{"image_path_{$i}"});
+                }
+                
+                // 新しいファイルを保存し、データ配列に直接パスを書き込む
+                $data["image_path_{$i}"] = $request->file("image_{$i}")->store('visit_images', 'public');
+            }
+        }
+
+        // 3. データベースのカルテ情報を更新
+        $visitHistory->update($data);
+
+        // 更新が終わったら、カルテ詳細画面にメッセージ付きで戻る
         return redirect()->route('customers.show', $customer)->with('success', 'カルテを更新しました。');
     }
-
+    
     /**
      * 💡 カルテを削除する
      */

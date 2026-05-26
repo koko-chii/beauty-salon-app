@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全体のレイアウト設定 */
+.reservation-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+}
+
+.reservation-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+/* 左側：サイドバー（登録フォーム） */
+.reservation-sidebar {
+    flex: 1;
+    min-width: 320px;
+}
+
+/* 右側：メインエリア（カレンダー） */
+.reservation-main {
+    flex: 3;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* カード共通装飾 */
+.form-card {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.calendar-card {
+    padding: 1.5rem;
+}
+
+/* 見出しとテキスト */
+.sidebar-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1f2937;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.375rem;
+}
+
+.form-control {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #1f2937;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    border-color: #8b5cf6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+/* ボタンとエラー関係 */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #8b5cf6;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #7c3aed;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.required-star {
+    color: #dc2626;
+}
+
+.error-text {
+    color: #dc2626;
+    font-size: 0.825rem;
+    margin-top: 0.25rem;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+}
+
+/* --- 💡 FullCalendar内のデザイン微調整 --- */
+.fc .fc-toolbar-title {
+    font-size: 1.25rem !important;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.fc .fc-button-primary {
+    background-color: #f3f4f6 !important;
+    border-color: #e5e7eb !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
+    text-shadow: none !important;
+}
+
+.fc .fc-button-primary:hover {
+    background-color: #e5e7eb !important;
+}
+
+.fc .fc-button-active {
+    background-color: #8b5cf6 !important;
+    border-color: #7c3aed !important;
+    color: #ffffff !important;
+}
+
+.fc-event {
+    padding: 2px 4px;
+    font-size: 0.8rem;
+    border-radius: 3px;
+}

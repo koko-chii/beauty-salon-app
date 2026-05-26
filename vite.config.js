@@ -17,6 +17,8 @@ export default defineConfig({
                 'resources/css/customer-index.css',
                 'resources/css/customer-show.css',
                 'resources/js/app.js',
+                'resources/css/reservations.css',
+                'resources/js/reservations.js',
             ],
             refresh: true,
         }),

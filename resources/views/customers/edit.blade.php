@@ -6,7 +6,7 @@
     </x-slot>
 
     @push('styles')
-        @vite(['resources/css/app.css'])
+        @vite(['resources/css/customer-edit.css'])
     @endpush
 
     <div class="customer-container" style="max-width: 600px;">

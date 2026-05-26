@@ -3,12 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController; // 💡 1. コントローラーを読み込む
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/customer/{id}/edit', [CustomerController::class, 'edit']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // 💡 2. ログイン認証（auth）が必要なグループの中に顧客管理ルートを追加
 Route::middleware('auth')->group(function () {
@@ -24,6 +26,19 @@ Route::middleware('auth')->group(function () {
 
     // ✨ その後にリソースルートを書く
     Route::resource('customers', CustomerController::class);
+
+    // 📅 予約カレンダー画面の表示と、カレンダーからデータを読み込むためのルート
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+    Route::get('/reservations/events', [ReservationController::class, 'getEvents'])->name('reservations.events');
+    // 📅 予約の新規登録
+    Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+
+    // ⭕ 予約を更新(Update)するためのルートを追記
+    Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
+
+    // ⭕ 予約を削除(Destroy)するためのルートを追記
+    Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
 });
 
 require __DIR__.'/auth.php';

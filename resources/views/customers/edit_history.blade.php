@@ -1,7 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <!-- 💡 修正ポイント：h1からスタート！ -->
-        <h1 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h1>
             {{ $customer->name }} 様のカルテ編集
         </h1>
     </x-slot>
@@ -13,7 +12,8 @@
     <div class="customer-container">
         <div class="form-card">
             
-            <form action="{{ route('customers.updateHistory', [$customer, $visitHistory]) }}" method="POST">
+            <!-- 💡 画像送信のために enctype="multipart/form-data" を追加 -->
+            <form action="{{ route('customers.updateHistory', [$customer, $visitHistory]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 
@@ -37,6 +37,26 @@
                     @error('memo') <p class="error-text">{{ $message }}</p> @enderror
                 </div>
 
+                <!-- 📸 施術写真のアップロード・変更欄を追加 -->
+                <div class="form-group image-upload-section">
+                    <label class="form-label font-bold">📸 施術写真（最大3枚）</label>
+                    
+                    <div class="image-input-wrapper">
+                        <input type="file" name="image_1" accept="image/*" class="form-control">
+                        @error('image_1') <p class="error-text">{{ $message }}</p> @enderror
+                    </div>
+                    
+                    <div class="image-input-wrapper">
+                        <input type="file" name="image_2" accept="image/*" class="form-control">
+                        @error('image_2') <p class="error-text">{{ $message }}</p> @enderror
+                    </div>
+                    
+                    <div class="image-input-wrapper">
+                        <input type="file" name="image_3" accept="image/*" class="form-control">
+                        @error('image_3') <p class="error-text">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
                 <div class="flex-between">
                     <a href="{{ route('customers.show', $customer) }}" class="text-gray fs-sm">キャンセル</a>
                     <button type="submit" class="btn-primary">変更を保存</button>
@@ -46,4 +66,3 @@
         </div>
     </div>
 </x-app-layout>
-

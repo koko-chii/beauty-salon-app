@@ -56,3 +56,25 @@
 }
 .text-gray { color: #4b5563; }
 .fs-sm { font-size: 0.875rem; }
+
+/* 入力欄の上の境界線と余白 */
+.image-upload-section {
+    margin-top: 1.5rem;
+    border-top: 1px dashed #e5e7eb;
+    padding-top: 1.5rem;
+}
+
+/* ラベルの太字設定 */
+.font-bold {
+    font-weight: 600;
+}
+
+/* 各ファイル選択ボタンの間の下余白 */
+.image-input-wrapper {
+    margin-bottom: 0.75rem;
+}
+
+/* 最後のファイル選択ボタンは下余白をなくす */
+.image-input-wrapper:last-child {
+    margin-bottom: 0;
+}

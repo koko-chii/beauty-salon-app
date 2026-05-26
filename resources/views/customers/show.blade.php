@@ -1,9 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <!-- 💡 修正ポイント：h1からスタート！ -->
-        <h1 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $customer->name }} 様のカルテ詳細
-        </h1>
+        <h1>{{ $customer->name }} 様のカルテ詳細</h1>
     </x-slot>
 
     @push('styles')
@@ -43,7 +40,7 @@
                 <div class="carte-card form-card-dashed">
                     <h2 class="fw-700 mb-1 text-gray">📝 新しい施術カルテを追加</h2>
                     
-                    <form action="{{ route('customers.storeHistory', $customer) }}" method="POST">
+                    <form action="{{ route('customers.storeHistory', $customer) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="customer_id" value="{{ $customer->id }}">
 
@@ -65,13 +62,29 @@
                             @error('memo') <p class="error-text">{{ $message }}</p> @enderror
                         </div>
 
-                        <div class="text-right">
+                        <div class="form-group image-upload-section">
+                            <label class="form-label font-bold">📸 施術写真（最大3枚）</label>
+                            <div class="image-input-wrapper">
+                                <input type="file" name="image_1" accept="image/*" class="form-control">
+                                @error('image_1') <p class="error-text">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="image-input-wrapper">
+                                <input type="file" name="image_2" accept="image/*" class="form-control">
+                                @error('image_2') <p class="error-text">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="image-input-wrapper">
+                                <input type="file" name="image_3" accept="image/*" class="form-control">
+                                @error('image_3') <p class="error-text">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+
+                        <div class="text-right button-margin">
                             <button type="submit" class="btn-primary">カルテを保存</button>
                         </div>
                     </form>
                 </div>
 
-                <h2 class="fs-lg fw-700 mb-1 text-dark">📜 過去の施術履歴</h2>
+                <h2 class="fs-lg fw-700 mb-1 text-dark header-margin">📜 過去の施術履歴</h2>
                 
                 @forelse ($histories as $history)
                     <div class="carte-card">
@@ -80,7 +93,22 @@
                         <hr class="hr-line">
                         <div class="carte-memo">{{ $history->memo ?? 'メモはありません。' }}</div>
                         
-                        <div class="carte-action-area">
+                        <!-- 💡 【ここです！】保存された写真を画面に引っ張り出すコードを確実に埋め込みました -->
+                        @if($history->image_path_1 || $history->image_path_2 || $history->image_path_3)
+                            <div class="carte-images">
+                                @if($history->image_path_1)
+                                    <img src="{{ asset('storage/' . $history->image_path_1) }}" alt="施術写真1" class="carte-image-item">
+                                @endif
+                                @if($history->image_path_2)
+                                    <img src="{{ asset('storage/' . $history->image_path_2) }}" alt="施術写真2" class="carte-image-item">
+                                @endif
+                                @if($history->image_path_3)
+                                    <img src="{{ asset('storage/' . $history->image_path_3) }}" alt="施術写真3" class="carte-image-item">
+                                @endif
+                            </div>
+                        @endif
+                        
+                        <div class="carte-action-area action-margin">
                             <a href="{{ route('customers.editHistory', [$customer, $history]) }}" class="link-primary fs-sm">
                                 カルテ編集
                             </a>
